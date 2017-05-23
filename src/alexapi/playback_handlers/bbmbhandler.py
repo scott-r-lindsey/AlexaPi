@@ -1,3 +1,4 @@
+
 import threading
 import logging
 import vlc
@@ -8,13 +9,9 @@ from .vlchandler import VlcHandler, PlaybackAudioType
 from pydub import AudioSegment
 from time import sleep
 
-
 logger = logging.getLogger(__name__)
 
-
 class BbmbHandler(VlcHandler):
-    def sup():
-        pass
 
     def on_play(self, item):
         logger.info("item url is " + item.url)
@@ -67,14 +64,14 @@ class BbmbHandler(VlcHandler):
 
         # ---------------------------------------
 
-        for level in levels:
-            if level > 1000:
-                GPIO.output(27, GPIO.HIGH)
-            else:
-                GPIO.output(27, GPIO.LOW)
-
-            sleep(.1)
-
+#        for level in levels:
+#            if level > 1000:
+#                GPIO.output(27, GPIO.HIGH)
+#            else:
+#                GPIO.output(27, GPIO.LOW)
+#
+#            sleep(.1)
+#
             #logger.info("level is " + str(level));
 
 
