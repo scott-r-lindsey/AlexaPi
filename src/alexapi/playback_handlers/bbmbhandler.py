@@ -1,4 +1,5 @@
 
+from __future__ import division
 import threading
 import logging
 import vlc
@@ -10,6 +11,7 @@ from pydub import AudioSegment
 from time import sleep
 
 logger = logging.getLogger(__name__)
+resolution = 20 # fractions / sec
 
 class BbmbHandler(VlcHandler):
 
@@ -37,7 +39,7 @@ class BbmbHandler(VlcHandler):
             # -----------------------------------------------------------------
             # process the file 
 
-            segment_size = frame_rate / 10 # 100ms resolution should do it
+            segment_size = frame_rate // resolution # 100ms resolution should do it
             i = 0
             levels = []
 
@@ -46,7 +48,7 @@ class BbmbHandler(VlcHandler):
                 sample = sound.get_sample_slice(i, i+segment_size)
                 i = i + segment_size
 
-                level = sample.max
+                level = sample.rms
                 levels.append(level)
 
 
@@ -56,22 +58,23 @@ class BbmbHandler(VlcHandler):
         return super (BbmbHandler, self).on_play(item)
 
     def animate(self, *levels):
-        logger.info("how's my peeps")
 
         GPIO.setmode(GPIO.BCM)
         GPIO.setwarnings(False)
         GPIO.setup(27, GPIO.OUT)
 
         # ---------------------------------------
+        sleep_period = 1/resolution
+        logger.info("sleep period is " + str(sleep_period))
 
-#        for level in levels:
-#            if level > 1000:
-#                GPIO.output(27, GPIO.HIGH)
-#            else:
-#                GPIO.output(27, GPIO.LOW)
-#
-#            sleep(.1)
-#
-            #logger.info("level is " + str(level));
+        for level in levels:
+            if level > 1000:
+                GPIO.output(27, GPIO.HIGH)
+            else:
+                GPIO.output(27, GPIO.LOW)
+
+            sleep(sleep_period)
+
+            logger.info("level is " + str(level));
 
 
