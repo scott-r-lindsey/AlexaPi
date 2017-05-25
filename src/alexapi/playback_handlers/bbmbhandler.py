@@ -18,6 +18,8 @@ class BbmbHandler(VlcHandler):
     def on_play(self, item):
         logger.info("item url is " + item.url)
 
+        path = False
+
         # ---------------------------------------------------------------------
         # process audio, local files only
         if re.match(r'^file:///', item.url):
